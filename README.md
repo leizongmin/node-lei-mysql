@@ -1,30 +1,25 @@
-lei-ns [![Build Status](https://secure.travis-ci.org/leizongmin/node-lei-ns.png?branch=master)](http://travis-ci.org/leizongmin/node-lei-ns) [![Dependencies Status](https://david-dm.org/leizongmin/node-lei-ns.png)](http://david-dm.org/leizongmin/node-lei-ns)
+lei-mysql [![Dependencies Status](https://david-dm.org/leizongmin/node-lei-ns.png)](http://david-dm.org/leizongmin/node-lei-ns)
 =======
 
 使用方法：
 
 ```javascript
-var ns = require('lei-ns');
-    
-// 设置
-console.log(ns('test.abc', {a: 123}));
-// 读取, 如果不存在则返回undefined
-console.log(ns('test.abc'));
+var MySQLPool = require('peento-module-mysql-pool');
 
-// 设置一个对象到顶级命名空间
-console.log(ns({a: 123, b: 456}));
-// 读取顶级命名空间
-console.log(ns());
+var pool = new MySQLPool({
+  host:     '127.0.0.1',
+  port:     3306,
+  database: 'test',
+  user:     'root',
+  password: '12345'
+  pool:     10
+});
 
-// 创建非公共的命名空间
-var myns = ns.Namespace();
-console.log(ns('test.abc', {a: 123}));
-console.log(ns('test.abc'));
+pool.query('SHOW TABLES', '*', 1, function (err, keys) {
+  if (err) throw err;
+  console.log(keys);
+});
 ```
-
-说明：
-
-* 名称使用小数点 `.` 来进行分隔
 
 
 License
