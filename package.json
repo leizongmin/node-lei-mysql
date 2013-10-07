@@ -2,7 +2,7 @@
   "name":           "lei-mysql",
   "main":           "./lib/index.js",
   "version":        "0.1.0",
-  "description":    "namespace",
+  "description":    "Simple MySQL Pool",
   "keywords":       ["mysql", "pool"],
   "author":         "Zongmin Lei <leizongmin@gmail.com> (http://ucdok.com)",
   "contributors": [
