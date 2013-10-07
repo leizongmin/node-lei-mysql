@@ -152,4 +152,46 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
+  it('select - fields - 1', function (done) {
+    db.select(TABLE, ['id', 'value'], 1, function (err, list) {
+      should.equal(err, null);
+      list.forEach(function (item) {
+        should.eql(Object.keys(item), ['id', 'value']);
+      });
+      done();
+    });
+  });
+
+  it('select - fields - 2', function (done) {
+    db.select(TABLE, ['id'], 1, function (err, list) {
+      should.equal(err, null);
+      list.forEach(function (item) {
+        should.eql(Object.keys(item), ['id']);
+      });
+      done();
+    });
+  });
+
+  it('select - fields - 3', function (done) {
+    db.select(TABLE, '`id`, `value`', 1, function (err, list) {
+      should.equal(err, null);
+      list.forEach(function (item) {
+        should.eql(Object.keys(item), ['id', 'value']);
+      });
+      done();
+    });
+  });
+
+  it('select - tail', function (done) {
+    db.select(TABLE, '*', 1, 'ORDER BY `value` DESC', function (err, list) {
+      should.equal(err, null);
+      for (var i = 0; i < list.length - 1; i++) {
+        var a = list[i];
+        var b = list[i + 1];
+        should.equal(a.value >= b.value);
+      }
+      done();
+    });
+  });
+
 });
