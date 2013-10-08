@@ -162,13 +162,13 @@ describe('Simple MySQL Pool', function () {
       done();
     });
   });
-  return;
+
   it('find - fields - 2', function (done) {
     db.find(TABLE, true, {fields: ['id']}, function (err, list) {
       should.equal(err, null);
       should.equal(list.length > INIT_COUNT, true);
       list.forEach(function (item) {
-        should.eql(Object.keys(item), ['id']);
+        should.deepEqual(Object.keys(item), ['id']);
       });
       done();
     });
@@ -179,7 +179,7 @@ describe('Simple MySQL Pool', function () {
       should.equal(err, null);
       should.equal(list.length > INIT_COUNT, true);
       list.forEach(function (item) {
-        should.eql(Object.keys(item), ['id', 'value']);
+        should.deepEqual(Object.keys(item), ['id', 'value']);
       });
       done();
     });
@@ -192,8 +192,24 @@ describe('Simple MySQL Pool', function () {
       for (var i = 0; i < list.length - 1; i++) {
         var a = list[i];
         var b = list[i + 1];
-        should.equal(a.value >= b.value);
+        should.equal(a.value >= b.value, true);
       }
+      done();
+    });
+  });
+
+  it('count - 1', function (done) {
+    db.count(TABLE, true, function (err, count) {
+      should.equal(err, null);
+      should.equal(count > INIT_COUNT, true);
+      done();
+    });
+  });
+
+  it('count - 2', function (done) {
+    db.count(TABLE, {timestamp: 0}, function (err, count) {
+      should.equal(err, null);
+      should.equal(count === 2, true);
       done();
     });
   });
