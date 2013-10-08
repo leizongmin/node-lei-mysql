@@ -16,29 +16,37 @@ var db = new MySQLPool({
 
 var TABLE = 'test';
 
-function wait (callback) {
-  if (wait._done) return callback(null);
-  // 创建初始化数据表
-  var sql = 'CREATE TABLE IF NOT EXISTS `test` (\n' +
-            '  `id` INT NOT NULL AUTO_INCREMENT ,\n' +
-            '  `value` DOUBLE NOT NULL ,\n' +
-            '  `timestamp` INT NOT NULL ,\n' +
-            '  PRIMARY KEY (`id`)' +
-            '  ) ENGINE=MyISAM AUTO_INCREMENT=1';
-  db.query(sql, function (err) {
-    wait._done = true;
-    callback(err);
-  });
-}
 
 describe('Simple MySQL Pool', function () {
 
   var INIT_COUNT = 1000;
 
-  it('remove all lines', function (done) {
-    wait(function () {
-      db.delete(TABLE, '1', done);
-    });
+  it('dropTable', function (done) {
+    db.dropTable(TABLE, function (err, info) {
+      should.equal(err, null);
+      console.log(info);
+      done();
+    })
+  });
+
+  it('createTable', function (done) {
+    db.createTable(TABLE, {
+      id: {
+        type: 'int',
+        autoIncrement: true
+      },
+      value: {
+        type: 'double',
+        default: 0
+      },
+      timestamp: 'int'
+    }, [
+      {fields: 'id', primary: true}
+    ], function (err, info) {
+      should.equal(err, null);
+      console.log(info);
+      done();
+    })
   });
 
   it('showFields', function (done) {
@@ -54,8 +62,7 @@ describe('Simple MySQL Pool', function () {
       done();
     });
   });
-
-  return;
+  
   it('insert random data', function (done) {
     var lines = [];
     for (var i = 0; i < INIT_COUNT; i++) {
