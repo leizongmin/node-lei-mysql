@@ -47,6 +47,14 @@ describe('Simple MySQL Pool', function () {
       done();
     });
   });
+
+  it('showIndexes', function (done) {
+    db.showIndexes('test2', function (err, indexes) {
+      should.equal(err, null);
+      done();
+    });
+  });
+
   return;
   it('insert random data', function (done) {
     var lines = [];
