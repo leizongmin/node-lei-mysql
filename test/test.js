@@ -3,6 +3,7 @@
  */
 
 var should = require('should');
+var async = require('async');
 
 var MySQLPool = require('../');
 var db = new MySQLPool({
@@ -24,7 +25,6 @@ describe('Simple MySQL Pool', function () {
   it('dropTable', function (done) {
     db.dropTable(TABLE, function (err, info) {
       should.equal(err, null);
-      console.log(info);
       done();
     })
   });
@@ -44,25 +44,10 @@ describe('Simple MySQL Pool', function () {
       {fields: 'id', primary: true}
     ], function (err, info) {
       should.equal(err, null);
-      console.log(info);
       done();
     })
   });
 
-  it('showFields', function (done) {
-    db.showFields('test2', function (err, fields) {
-      should.equal(err, null);
-      done();
-    });
-  });
-
-  it('showIndexes', function (done) {
-    db.showIndexes('test2', function (err, indexes) {
-      should.equal(err, null);
-      done();
-    });
-  });
-  
   it('insert random data', function (done) {
     var lines = [];
     for (var i = 0; i < INIT_COUNT; i++) {
@@ -232,6 +217,94 @@ describe('Simple MySQL Pool', function () {
     db.count(TABLE, {timestamp: 0}, function (err, count) {
       should.equal(err, null);
       should.equal(count === 2, true);
+      done();
+    });
+  });
+
+  // ===========================================================================
+
+  it('createTable & showFields & showIndexes', function (done) {
+    var TABLE = 'test_' + Date.now();
+
+    async.series([
+      function (done) {
+        db.createTable(TABLE, {
+          a: 'int',
+          b: {type: 'int', size: 10, default: 1},
+          c: {type: 'varchar', size: 5, charset: 'utf8', null: true, default: 'a'},
+          d: {type: 'int', autoIncrement: true},
+          e: {type: 'text', charset: 'gbk'}
+        }, [
+          'a',
+          'b',
+          {fields: ['a', 'b'], unique: true},
+          {fields: 'c'},
+          {fields: 'd', primary: true},
+          {fields: 'e', fullText: true}
+        ], done);
+      },
+      function (done) {
+        db.showFields(TABLE, function (err, fields) {
+          if (err) return done(err);
+          should.deepEqual(Object.keys(fields), ['a', 'b', 'c', 'd', 'e']);
+          should.deepEqual(fields, {
+            a: {
+              type: 'INT',
+              size: '11',
+              null: true,
+              default: null,
+              autoIncrement: false,
+              primary: false,
+              unique: false,
+              index: true
+            },
+            b: {
+              type: 'INT',
+              size: '10',
+              null: false,
+              default: '1',
+              autoIncrement: false,
+              primary: false,
+              unique: false,
+              index: true
+            },
+          c: {
+            type: 'VARCHAR',
+            size: '5',
+            null: true,
+            default: 'a',
+            autoIncrement: false,
+            primary: false,
+            unique: false,
+            index: true
+          },
+          d: {
+            type: 'INT',
+            size: '11',
+            null: false,
+            default: null,
+            autoIncrement: true,
+            primary: true,
+            unique: false,
+            index: false
+          },
+          e: {
+            type: 'TEXT',
+            size: '',
+            null: false,
+            default: null,
+            autoIncrement: false,
+            primary: false,
+            unique: false,
+            index: true
+          }});
+          done();
+        });
+      }, function (done) {
+        db.dropTable(TABLE, done);
+      }
+    ], function (err) {
+      should.equal(err, null);
       done();
     });
   });
