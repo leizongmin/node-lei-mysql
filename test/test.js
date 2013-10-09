@@ -223,10 +223,26 @@ describe('Simple MySQL Pool', function () {
 
   // ===========================================================================
 
-  it('createTable & showFields & showIndexes', function (done) {
+  it('createTable & showFields & showIndexes & updateTable', function (done) {
     var TABLE = 'test_' + Date.now();
 
+    var INDEXES_1 = [
+      'a',
+      'b',
+      {fields: ['a', 'b'], unique: true},
+      {fields: 'c'},
+      {fields: 'd', primary: true},
+      {fields: 'e', fullText: true}
+    ];
+    var INDEXES_2 = [
+      {fields: ['b', 'c']},
+      {fields: 'c', primary: true},
+      {fields: 'd'},
+      {fields: 'e', fullText: true}
+    ];
+
     async.series([
+      // 创建表
       function (done) {
         db.createTable(TABLE, {
           a: 'int',
@@ -234,15 +250,9 @@ describe('Simple MySQL Pool', function () {
           c: {type: 'varchar', size: 5, charset: 'utf8', null: true, default: 'a'},
           d: {type: 'int', autoIncrement: true},
           e: {type: 'text', charset: 'gbk'}
-        }, [
-          'a',
-          'b',
-          {fields: ['a', 'b'], unique: true},
-          {fields: 'c'},
-          {fields: 'd', primary: true},
-          {fields: 'e', fullText: true}
-        ], done);
+        }, INDEXES_1, done);
       },
+      // 检查表结构
       function (done) {
         db.showFields(TABLE, function (err, fields) {
           if (err) return done(err);
@@ -300,25 +310,97 @@ describe('Simple MySQL Pool', function () {
           }});
           done();
         });
-      }, function (done) {
+      },
+      // 检查索引结构
+      function (done) {
+        db.showIndexes(TABLE, function (err, indexes) {
+          should.equal(err, null);
+          should.equal(compareIndexes(INDEXES_1, indexes), true);
+          done();
+        });
+      },
+      // 更新表结构
+      function (done) {
         db.updateTable(TABLE, {
           b: {type: 'double', default: 1},
           c: {type: 'varchar', size: 5, charset: 'utf8', null: true, default: 'a'},
           d: {type: 'int', autoIncrement: true},
           e: {type: 'text', charset: 'gbk'},
           f: 'int'
-        }, [
-          //'a',
-          //'b',
-          {fields: ['b', 'c'], unique: false},
-          {fields: 'c', primary: true},
-          {fields: 'd', primary: false},
-          {fields: 'e', fullText: true}
-        ], function (err) {
+        }, INDEXES_2, function (err) {
           should.equal(err, null);
           done();
         });
-      }, function (done) {
+      },
+      // 检查表结构
+      function (done) {
+        db.showFields(TABLE, function (err, fields) {
+          if (err) return done(err);
+          should.deepEqual(Object.keys(fields), ['b', 'c', 'd', 'e', 'f']);
+          should.deepEqual(fields, {
+            b: {
+              type: 'DOUBLE',
+              size: '',
+              null: false,
+              default: '1',
+              autoIncrement: false,
+              primary: false,
+              unique: false,
+              index: true
+            },
+            c: {
+              type: 'VARCHAR',
+              size: '5',
+              null: false,
+              default: 'a',
+              autoIncrement: false,
+              primary: true,
+              unique: false,
+              index: false
+            },
+            d: {
+              type: 'INT',
+              size: '11',
+              null: false,
+              default: null,
+              autoIncrement: true,
+              primary: false,
+              unique: false,
+              index: true
+            },
+            e: {
+              type: 'TEXT',
+              size: '',
+              null: false,
+              default: null,
+              autoIncrement: false,
+              primary: false,
+              unique: false,
+              index: true
+            },
+            f: {
+              type: 'INT',
+              size: '11',
+              null: true,
+              default: null,
+              autoIncrement: false,
+              primary: false,
+              unique: false,
+              index: false
+          }});
+          done();
+        });
+      },
+      // 检查索引
+      function (done) {
+        db.showIndexes(TABLE, function (err, indexes) {
+          should.equal(err, null);
+          should.equal(compareIndexes(INDEXES_2, indexes), true);
+          done();
+        });
+      },
+      // 删除表
+      function (done) {
         db.dropTable(TABLE, done);
       }
     ], function (err) {
@@ -328,3 +410,47 @@ describe('Simple MySQL Pool', function () {
   });
 
 });
+
+
+// 对比索引结构
+function compareIndexes (listA, listB) {
+  listA = listA.map(formatIndexes);
+  listB = listB.map(formatIndexes);
+  if (listA.length !== listB.length) return false;
+  var count = 0;
+  listA.forEach(function (a) {
+    for (var i = 0; i < listB.length; i++) {
+      var b = listB[i];
+      if (fieldsIsEqual(a.fields, b.fields) && a.primary === b.primary &&
+          a.unique === b.unique && a.fullText === b.fullText) {
+        count++;
+        break;
+      }
+    }
+  });
+  return (count === listA.length);
+}
+
+function fieldsIsEqual (a, b) {
+  if (a === b) return true;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function formatIndexes (data) {
+  if (typeof data === 'string' || Array.isArray(data)) {
+    data = {fields: data};
+  }
+
+  data.primary = !!data.primary;
+  data.unique = !!data.unique;
+  data.fullText = !!data.fullText;
+  return data;
+}
