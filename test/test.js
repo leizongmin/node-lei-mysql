@@ -309,10 +309,10 @@ describe('Simple MySQL Pool', function () {
           f: 'int'
         }, [
           //'a',
-          'b',
-          {fields: ['a', 'b'], unique: false},
-          {fields: 'c'},
-          {fields: 'd', primary: true},
+          //'b',
+          {fields: ['b', 'c'], unique: false},
+          {fields: 'c', primary: true},
+          {fields: 'd', primary: false},
           {fields: 'e', fullText: true}
         ], function (err) {
           should.equal(err, null);
