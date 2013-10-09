@@ -308,10 +308,10 @@ describe('Simple MySQL Pool', function () {
           e: {type: 'text', charset: 'gbk'},
           f: 'int'
         }, [
-          'a',
+          //'a',
           'b',
-          {fields: ['a', 'b']},
-          //{fields: 'c'},
+          {fields: ['a', 'b'], unique: false},
+          {fields: 'c'},
           {fields: 'd', primary: true},
           {fields: 'e', fullText: true}
         ], function (err) {
