@@ -301,6 +301,24 @@ describe('Simple MySQL Pool', function () {
           done();
         });
       }, function (done) {
+        db.updateTable(TABLE, {
+          b: {type: 'double', default: 1},
+          c: {type: 'varchar', size: 5, charset: 'utf8', null: true, default: 'a'},
+          d: {type: 'int', autoIncrement: true},
+          e: {type: 'text', charset: 'gbk'},
+          f: 'int'
+        }, [
+          'a',
+          'b',
+          {fields: ['a', 'b']},
+          //{fields: 'c'},
+          {fields: 'd', primary: true},
+          {fields: 'e', fullText: true}
+        ], function (err) {
+          should.equal(err, null);
+          done();
+        });
+      }, function (done) {
         db.dropTable(TABLE, done);
       }
     ], function (err) {
