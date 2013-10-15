@@ -14,12 +14,9 @@ var pool = new MySQLPool({
   password: '12345'
   pool:     10
 });
-
-pool.query('SHOW TABLES', '*', 1, function (err, keys) {
-  if (err) throw err;
-  console.log(keys);
-});
 ```
+
+详细使用方法请查看测试文件：https://github.com/leizongmin/node-lei-mysql/blob/master/test/test.js
 
 
 License
