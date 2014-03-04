@@ -132,6 +132,20 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
+  it('update - 4', function (done) {
+    var where = '`value`=1';
+    db.update(TABLE, where, {timestamp: ['$incr', -5]}, function (err, info) {
+      should.equal(err, null);
+      should.equal(info.affectedRows, 1);
+      db.findOne(TABLE, where, function (err, item) {
+        should.equal(err, null);
+        should.equal(item.value, 1);
+        should.equal(item.timestamp, 8);
+        done();
+      });
+    });
+  });
+
   it('delete', function (done) {
     var where = '`value`=1';
     db.delete(TABLE, where, function (err, info) {
