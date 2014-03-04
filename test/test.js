@@ -90,7 +90,7 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
-  it('update', function (done) {
+  it('update - 1', function (done) {
     var where = '`value`=1';
     db.update(TABLE, where, {timestamp: 1}, function (err, info) {
       should.equal(err, null);
@@ -99,6 +99,20 @@ describe('Simple MySQL Pool', function () {
         should.equal(err, null);
         should.equal(item.value, 1);
         should.equal(item.timestamp, 1);
+        done();
+      });
+    });
+  });
+
+  it('update - 2', function (done) {
+    var where = '`value`=1';
+    db.update(TABLE, where, '`timestamp`=`timestamp`+10', function (err, info) {
+      should.equal(err, null);
+      should.equal(info.affectedRows, 1);
+      db.findOne(TABLE, where, function (err, item) {
+        should.equal(err, null);
+        should.equal(item.value, 1);
+        should.equal(item.timestamp, 11);
         done();
       });
     });
