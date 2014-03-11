@@ -20,7 +20,7 @@ var TABLE = 'test';
 
 describe('Simple MySQL Pool', function () {
 
-  var INIT_COUNT = 1000;
+  var INIT_COUNT = 10;
 
   it('dropTable', function (done) {
     db.dropTable(TABLE, function (err, info) {
