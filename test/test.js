@@ -511,6 +511,32 @@ describe('Simple MySQL Pool', function () {
       done();
     });
   });
+
+  it('use(error)', function (done) {
+    initFilters();
+    var badSql = 'OOXX';
+    var counter = 0;
+    var originErr;
+    db.use('error', function (sql, err, next) {
+      should.equal(sql, badSql);
+      should.notEqual(err, null);
+      counter++;
+      originErr = err;
+      next();
+    });
+    db.use('error', function (sql, err, next) {
+      should.equal(sql, badSql);
+      should.notEqual(err, null);
+      counter++;
+      next();
+    });
+    db.query(badSql, function (err) {
+      should.equal(err, originErr);
+      should.equal(counter, 2);
+      done();
+    });
+  });
+
 return;
   it('use(sql) - 1', function (done) {
     initFilters();
