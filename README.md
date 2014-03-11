@@ -16,6 +16,8 @@ var pool = new MySQLPool({
 });
 ```
 
+**自用的东西，可能会随时改动，不建议使用，如果非要使用，一定要指定版本号**
+
 详细使用方法请查看测试文件：https://github.com/leizongmin/node-lei-mysql/blob/master/test/test.js
 
 
@@ -23,7 +25,7 @@ License
 ========
 
 ```
-Copyright (c) 2013 Zongmin Lei(雷宗民) <leizongmin@gmail.com>
+Copyright (c) 2013-2014 Zongmin Lei(雷宗民) <leizongmin@gmail.com>
 http://ucdok.com
 
 The MIT License
