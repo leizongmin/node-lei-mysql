@@ -537,7 +537,6 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
-return;
   it('use(sql) - 1', function (done) {
     initFilters();
     var sql1 = 'SELECT * FROM `' + TABLE + '`';
