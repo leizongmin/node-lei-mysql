@@ -24,12 +24,12 @@
   },
   "dependencies": {
     "debug":        "~0.7",
-    "mysql":        "2.x"
+    "mysql":        "2.x",
+    "async":        "0.2.x"
   },
   "devDependencies":  {
     "mocha":        "~1.9",
-    "should":       "~1.2",
-    "async":        "0.2.x"
+    "should":       "~1.2"
   },
   "scripts": {
     "test":         "mocha -t 30000"

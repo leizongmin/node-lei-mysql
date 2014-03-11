@@ -451,6 +451,114 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
+  // ===========================================================================
+
+  it('dropTable', function (done) {
+    db.dropTable(TABLE, function (err, info) {
+      should.equal(err, null);
+      done();
+    })
+  });
+
+  it('createTable', function (done) {
+    db.createTable(TABLE, {
+      id: {
+        type: 'int',
+        autoIncrement: true
+      },
+      value: {
+        type: 'double',
+        default: 0
+      },
+      timestamp: 'int'
+    }, [
+      {fields: 'id', primary: true}
+    ], function (err, info) {
+      should.equal(err, null);
+      done();
+    })
+  });
+
+  it('insert random data', function (done) {
+    var lines = [];
+    for (var i = 0; i < INIT_COUNT; i++) {
+      lines.push({value: Math.random(), timestamp: db.timestamp() + i});
+    }
+    db.insert(TABLE, lines, done);
+  });
+
+  function initFilters () {
+    db._filters = {
+      sql:    [],
+      result: [],
+      error:  []
+    };
+  }
+
+  it('use(result)', function (done) {
+    initFilters();
+    db.use('result', function (sql, list, next) {
+      should.equal(list.length, INIT_COUNT);
+      next(null, list.slice(0, 5));
+    });
+    db.use('result', function (sql, list, next) {
+      should.equal(list.length, 5);
+      next(null, list.slice(0, 3));
+    });
+    db.find(TABLE, true, function (err, list) {
+      should.equal(err, null);
+      should.equal(list.length, 3);
+      done();
+    });
+  });
+return;
+  it('use(sql) - 1', function (done) {
+    initFilters();
+    var sql1 = 'SELECT * FROM `' + TABLE + '`';
+    var sql2 = sql1 + ' LIMIT 4';
+    db.use('sql', function (sql, next) {
+      should.equal(sql, sql1);
+      next(null, sql2);
+    });
+    db.use('select', function (sql, next) {
+      should.equal(sql, sql2);
+      next(null, sql);
+    });
+    db.use('update', function (sql, next) {
+      next(new Error('at this time should not call the update function'));
+    });
+    db.query(sql1, function (err, list) {
+      should.equal(err, null);
+      should.equal(list.length, 4);
+      done();
+    });
+  });
+
+  it('use(sql) - 2', function (done) {
+    initFilters();
+    var sql1 = 'SELECT * FROM `' + TABLE + '`';
+    var sql2 = sql1 + ' LIMIT 4';
+    var data = [{a: 1}, {b: 2}];
+    db.use('sql', function (sql, next) {
+      should.equal(sql, sql1);
+      next(null, sql2);
+    });
+    db.use('select', function (sql, next) {
+      should.equal(sql, sql2);
+      next(null, sql1);
+    });
+    db.use('sql', function (sql, next) {
+      should.equal(sql, sql1);
+      next(null, data);
+    });
+    db.query(sql1, function (err, list) {
+      should.equal(err, null);
+      should.equal(list.length, data.length);
+      should.deepEqual(list, data);
+      done();
+    });
+  });
+
 });
 
 
