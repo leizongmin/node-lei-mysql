@@ -1,10 +1,10 @@
-lei-mysql [![Dependencies Status](https://david-dm.org/leizongmin/node-lei-ns.png)](http://david-dm.org/leizongmin/node-lei-ns)
+lei-mysql
 =======
 
 使用方法：
 
 ```javascript
-var MySQLPool = require('peento-module-mysql-pool');
+var MySQLPool = require('lei-mysql');
 
 var pool = new MySQLPool({
   host:     '127.0.0.1',
@@ -25,7 +25,7 @@ License
 ========
 
 ```
-Copyright (c) 2013-2014 Zongmin Lei(雷宗民) <leizongmin@gmail.com>
+Copyright (c) 2013-2014 Zongmin Lei (雷宗民) <leizongmin@gmail.com>
 http://ucdok.com
 
 The MIT License
