@@ -26,7 +26,7 @@ describe('Simple MySQL Pool', function () {
     db.dropTable(TABLE, function (err, info) {
       should.equal(err, null);
       done();
-    })
+    });
   });
 
   it('createTable', function (done) {
@@ -45,7 +45,7 @@ describe('Simple MySQL Pool', function () {
     ], function (err, info) {
       should.equal(err, null);
       done();
-    })
+    });
   });
 
   it('insert random data', function (done) {
@@ -457,7 +457,7 @@ describe('Simple MySQL Pool', function () {
     db.dropTable(TABLE, function (err, info) {
       should.equal(err, null);
       done();
-    })
+    });
   });
 
   it('createTable', function (done) {
@@ -476,7 +476,7 @@ describe('Simple MySQL Pool', function () {
     ], function (err, info) {
       should.equal(err, null);
       done();
-    })
+    });
   });
 
   it('insert random data', function (done) {
