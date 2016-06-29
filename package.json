@@ -1,37 +1,45 @@
 {
-  "name":           "lei-mysql",
-  "main":           "./lib/index.js",
-  "version":        "0.1.9",
-  "description":    "Simple MySQL Pool",
-  "keywords":       ["mysql", "pool"],
-  "author":         "Zongmin Lei <leizongmin@gmail.com> (http://ucdok.com)",
+  "name": "lei-mysql",
+  "main": "./lib/index.js",
+  "version": "0.1.9",
+  "description": "Simple MySQL Pool",
+  "keywords": [
+    "mysql",
+    "pool"
+  ],
+  "author": "Zongmin Lei <leizongmin@gmail.com> (http://ucdok.com)",
   "contributors": [
-    {"name": "Zongmin Lei", "email": "leizongmin@gmail.com"}
+    {
+      "name": "Zongmin Lei",
+      "email": "leizongmin@gmail.com"
+    }
   ],
   "repository": {
     "type": "git",
-    "url":  "git://github.com/leizongmin/node-lei-mysql.git"
+    "url": "git://github.com/leizongmin/node-lei-mysql.git"
   },
-  "licemysqles":     [{
-    "type":         "MIT",
-    "url":          "https://raw.github.com/leizongmin/node-lei-mysql/master/MIT-Licemysqle"
-  }],
-  "bugs":{
-    "url":          "https://github.com/leizongmin/node-lei-mysql/issues"
+  "licemysqles": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/leizongmin/node-lei-mysql/master/MIT-Licemysqle"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/leizongmin/node-lei-mysql/issues"
   },
   "engines": {
-    "node":         ">= 0.6.0"
+    "node": ">= 0.6.0"
   },
   "dependencies": {
-    "debug":        "~0.7",
-    "mysql":        "2.x",
-    "async":        "0.2.x"
+    "debug": "~2.2.0",
+    "mysql": "2.x",
+    "async": "1.5.2"
   },
-  "devDependencies":  {
-    "mocha":        "~1.9",
-    "should":       "~1.2"
+  "devDependencies": {
+    "mocha": "~2.5.3",
+    "should": "~9.0.2"
   },
   "scripts": {
-    "test":         "mocha -t 30000"
+    "test": "mocha -t 30000"
   }
 }
