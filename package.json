@@ -33,7 +33,7 @@
   "dependencies": {
     "debug": "~2.2.0",
     "mysql": "2.x",
-    "async": "1.5.2"
+    "async": "2.0.0"
   },
   "devDependencies": {
     "mocha": "~2.5.3",
