@@ -40,6 +40,7 @@
     "should": "~10.0.0"
   },
   "scripts": {
-    "test": "mocha -t 30000"
+    "test": "mocha -t 30000",
+    "test:debug": "export DEBUG='lei-mysql' && mocha -t 30000"
   }
 }

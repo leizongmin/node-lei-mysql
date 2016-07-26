@@ -365,7 +365,7 @@ describe('Simple MySQL Pool', function () {
       function (done) {
         db.updateTable(TABLE, {
           b: {type: 'double', default: 1},
-          c: {type: 'varchar', size: 5, charset: 'utf8', null: true, default: 'a'},
+          c: {type: 'varchar', size: 5, charset: 'utf8', null: false, default: 'a'},
           d: {type: 'int', autoIncrement: true},
           e: {type: 'text', charset: 'gbk'},
           f: 'int'
