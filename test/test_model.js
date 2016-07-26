@@ -118,6 +118,20 @@ describe('Simple MySQL Model', function () {
     });
   });
 
+  it('update - 3 如果要更新的data为空对象，不执行而直接返回', function (done) {
+    var where = '`value`=1';
+    db.model(TABLE).updateAll(where, '', function (err, info) {
+      should.equal(err, null);
+      should.equal(info.affectedRows, 0);
+      db.findOne(TABLE, where, function (err, item) {
+        should.equal(err, null);
+        should.equal(item.value, 1);
+        should.equal(item.timestamp, 11);
+        done();
+      });
+    });
+  });
+
   it('incr - 1', function (done) {
     var where = '`value`=1';
     db.model(TABLE).incr(where, {timestamp: 2}, function (err, info) {

@@ -146,6 +146,20 @@ describe('Simple MySQL Pool', function () {
     });
   });
 
+  it('update - 5 如果要更新的data为空对象，不执行而直接返回', function (done) {
+    var where = '`value`=1';
+    db.update(TABLE, where, {}, function (err, info) {
+      should.equal(err, null);
+      should.equal(info.affectedRows, 0);
+      db.findOne(TABLE, where, function (err, item) {
+        should.equal(err, null);
+        should.equal(item.value, 1);
+        should.equal(item.timestamp, 8);
+        done();
+      });
+    });
+  });
+
   it('delete', function (done) {
     var where = '`value`=1';
     db.delete(TABLE, where, function (err, info) {
