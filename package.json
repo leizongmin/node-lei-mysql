@@ -28,7 +28,7 @@
     "url": "https://github.com/leizongmin/node-lei-mysql/issues"
   },
   "engines": {
-    "node": ">= 0.6.0"
+    "node": ">= 4"
   },
   "dependencies": {
     "debug": "~2.2.0",
